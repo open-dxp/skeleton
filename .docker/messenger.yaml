@@ -1,0 +1,8 @@
+framework:
+    messenger:
+        transports:
+            opendxp_core: 'amqp://rabbitmq:5672/%2f/opendxp_core'
+            opendxp_maintenance: 'amqp://rabbitmq:5672/%2f/opendxp_maintenance'
+            opendxp_scheduled_tasks: 'amqp://rabbitmq:5672/%2f/opendxp_scheduled_tasks'
+            opendxp_image_optimize: 'amqp://rabbitmq:5672/%2f/opendxp_image_optimize'
+            opendxp_asset_update: 'amqp://rabbitmq:5672/%2f/opendxp_asset_update'

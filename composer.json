@@ -1,0 +1,70 @@
+{
+    "name": "open-dxp/skeleton",
+    "type": "project",
+    "license": "GPL-3.0-or-later",
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "process-timeout": 0,
+        "allow-plugins": {
+            "symfony/runtime": true,
+            "wikimedia/composer-merge-plugin": true
+        }
+    },
+    "prefer-stable": true,
+    "require": {
+        "open-dxp/opendxp": "*",
+        "open-dxp/admin-ui-classic-bundle": "*",
+        "symfony/dotenv": "^6.2",
+        "symfony/runtime": "^6.2"
+    },
+    "require-dev": {
+        "codeception/codeception": "^5.0.3",
+        "codeception/module-symfony": "^3.1.0",
+        "wikimedia/composer-merge-plugin": "^2.1"
+    },
+    "suggest": {
+        "open-dxp/data-hub": "Universal data interface for GraphQL, CSV and other formats"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "OpenDxp\\Model\\DataObject\\": "var/classes/DataObject"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": "OpenDxp\\Composer::postCreateProject",
+        "post-install-cmd": [
+            "OpenDxp\\Composer::postInstall",
+            "@opendxp-scripts"
+        ],
+        "post-update-cmd": [
+            "OpenDxp\\Composer::postUpdate",
+            "@opendxp-scripts"
+        ],
+        "opendxp-scripts": [
+            "OpenDxp\\Composer::clearCache",
+            "OpenDxp\\Composer::installAssets"
+        ]
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json"
+            ],
+            "recurse": true,
+            "replace": true,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": false,
+            "merge-extra-deep": false,
+            "merge-replace": true,
+            "merge-scripts": false
+        }
+    }
+}
