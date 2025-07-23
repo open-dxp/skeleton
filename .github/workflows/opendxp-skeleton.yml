@@ -28,7 +28,7 @@ jobs:
         set -ex
         
         # Pull latest build of opendxp's image
-        docker pull docker.io/open-dxp/opendxp:php8.2-latest
+        docker pull docker.io/opendxp/opendxp:php8.2-latest
 
     - name: Create project from skeleton in latest opendxp environment
       run: |
@@ -45,7 +45,7 @@ jobs:
           --volume=${{ github.workspace }}/:/test/ \
           --workdir=/test/ \
           --user=$(id -u):$(id -g) \
-          docker.io/open-dxp/opendxp:php8.2-latest \
+          docker.io/opendxp/opendxp:php8.2-latest \
             composer create-project \
               open-dxp/skeleton:@dev \
               --repository='{"type": "path", "url": "./skeleton"}' \
