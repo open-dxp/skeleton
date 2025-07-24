@@ -37,14 +37,12 @@ class DefaultControllerTest extends Unit
         $this->controller->setContainer($container);
     }
 
-    public function testDefaultAction()
+    public function testDefaultAction(): void
     {
-        $this->twig->method('render')->will(
-            $this->returnValueMap([
-                // Simulate rendering of default template.
-                ['default/default.html.twig', [], 'At opendxp we love writing tests!'],
-            ])
-        );
+        $this->twig->method('render')->willReturnMap([
+            // Simulate rendering of default template.
+            ['default/default.html.twig', [], 'At opendxp we love writing tests!'],
+        ]);
 
         $response = $this->controller->defaultAction($this->createMock(Request::class));
 

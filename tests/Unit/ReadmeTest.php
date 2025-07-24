@@ -20,8 +20,8 @@ class ReadmeTest extends Unit
 
     public function testReadmeIsWrittenWithLove(): void
     {
-        self::assertStringContainsString('😎', $this->readme);
-        self::assertStringContainsString('opendxp', $this->readme);
+        self::assertStringContainsString('OpenDXP', $this->readme);
+        self::assertStringContainsString('opendxp-install', $this->readme);
     }
 
     public function testReadmeContainsInstructionsForExecutingTests(): void
