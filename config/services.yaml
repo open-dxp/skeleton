@@ -1,5 +1,6 @@
 parameters:
     secret: qGjXvAncEhZnqxUBdpIHIs27YoqgmUlvJV9IodTLul0=
+    default_database_server_version: 8.0
 
     # customize the full path to external executables
     # normally they are auto-detected by `which program` or auto-discovered in the configured path in

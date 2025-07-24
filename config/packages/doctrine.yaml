@@ -1,0 +1,5 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                server_version: '%env(string:default:default_database_server_version:DATABASE_SERVER_VERSION)%'

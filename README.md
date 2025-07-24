@@ -1,7 +1,6 @@
 # OpenDXP | Project Skeleton 
 
 This skeleton should be used by experienced OpenDXP developers for starting a new project from the ground up. 
-If you are new to OpenDXP, it's better to start with our demo package, listed below.
 
 ## Disclaimer
 
@@ -24,6 +23,23 @@ cd ./my-project
 - [Only for Apache] Create `my-project/public/.htaccess` according to docs/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration/ 
 - Open https://your-host/admin in your browser
 - Done!
+
+## Note for first-time setup
+To allow cache:clear and other commands to run without an active database connection, the default configuration sets:
+
+```yaml
+doctrine:
+    dbal:
+        connections:
+            default:
+                server_version: '%env(default:8.0:DATABASE_SERVER_VERSION)%'
+```
+
+If you're using a different database version, you can override this in your `.env` or `.env.local`:
+
+```dotenv
+DATABASE_SERVER_VERSION=10.11
+```
 
 ## Docker
 
