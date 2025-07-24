@@ -1,7 +1,17 @@
-# OpenDXP Project Skeleton 
+# OpenDXP | Project Skeleton 
 
 This skeleton should be used by experienced OpenDXP developers for starting a new project from the ground up. 
-If you are new to OpenDXP, it's better to start with our demo package, listed below 😉
+If you are new to OpenDXP, it's better to start with our demo package, listed below.
+
+## Disclaimer
+
+> The open future of Pimcore CE. A community-driven fork based on Pimcore Community Edition (GPLv3), created to keep Open Source open!  
+> Original credits: [Pimcore GmbH](https://www.pimcore.com)
+
+OpenDXP is an independent, community-maintained fork of Pimcore.  
+It is not affiliated with or endorsed by Pimcore GmbH.
+
+***
 
 ## Getting started
 ```bash
@@ -13,7 +23,7 @@ cd ./my-project
 - Point your virtual host to `my-project/public`
 - [Only for Apache] Create `my-project/public/.htaccess` according to docs/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration/ 
 - Open https://your-host/admin in your browser
-- Done! 😎
+- Done!
 
 ## Docker
 
@@ -21,7 +31,6 @@ You can also use Docker to set up a new OpenDXP Installation.
 You don't need to have a PHP environment with composer installed.
 
 ### Prerequisites
-
 * Your user must be allowed to run docker commands (directly or via sudo).
 * You must have docker compose installed.
 * Your user must be allowed to change file permissions (directly or via sudo).
@@ -52,3 +61,19 @@ You don't need to have a PHP environment with composer installed.
     * The frontend: <http://localhost>
     * The admin interface, using the credentials you have chosen above:
       <http://localhost/admin>
+
+***
+
+## Copyright and License 
+Copyright: OpenDXP
+
+This project is a fork of [Pimcore Skeleton 2024.x](https://github.com/pimcore/skeleton/tree/a7a52d4fd580cdcdeae26a9f148203e721fee9c7),
+which is © Pimcore GmbH and licensed under the GPLv3.
+
+For licensing details please visit [LICENSE.md](LICENSE.md)
+
+## Contact
+For inquiries, suggestions, or contributions, feel free to reach us at contact@opendxp.ch.
+
+## About
+OpenDXP is a community-driven project maintained and developed by [DACHCOM.DIGITAL](https://www.dachcom.com/de-ch), based in Rheineck, Switzerland.
