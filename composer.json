@@ -12,14 +12,15 @@
         }
     },
     "prefer-stable": true,
+    "minimum-stability": "dev",
     "require": {
         "open-dxp/opendxp": "*",
         "open-dxp/admin-ui-classic-bundle": "*",
-        "symfony/dotenv": "^6.2",
-        "symfony/runtime": "^6.2"
+        "symfony/dotenv": "^6.4",
+        "symfony/runtime": "^6.4"
     },
     "require-dev": {
-        "codeception/codeception": "^5.0.3",
+        "codeception/codeception": "5.2.2",
         "codeception/module-symfony": "^3.1.0",
         "wikimedia/composer-merge-plugin": "^2.1"
     },
