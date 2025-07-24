@@ -38,7 +38,7 @@ doctrine:
 If you're using a different database version, you can override this in your `.env` or `.env.local`:
 
 ```dotenv
-DATABASE_SERVER_VERSION=mariadb-10.11
+DATABASE_SERVER_VERSION=mariadb-10.11.13
 ```
 
 ## Docker
