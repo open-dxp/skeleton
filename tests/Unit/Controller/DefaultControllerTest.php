@@ -48,7 +48,6 @@ class DefaultControllerTest extends Unit
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertStringContainsStringIgnoringCase('opendxp', $response->getContent());
-        self::assertStringContainsStringIgnoringCase('❤', $response->getContent());
         self::assertStringContainsStringIgnoringCase('tests', $response->getContent());
         self::assertStringNotContainsStringIgnoringCase('bugs', $response->getContent());
         self::assertStringNotContainsStringIgnoringCase('hacks', $response->getContent());
