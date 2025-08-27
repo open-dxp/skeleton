@@ -4,7 +4,7 @@ This skeleton should be used by experienced OpenDXP developers for starting a ne
 
 ## Disclaimer
 
-> The open future of Pimcore CE. A community-driven fork based on Pimcore Community Edition (GPLv3), created to keep Open Source open!  
+> A community-driven fork based on Pimcore Community Edition (GPLv3), created to keep Open Source open!  
 > Original credits: [Pimcore GmbH](https://www.pimcore.com)
 
 OpenDXP is an independent, community-maintained fork of Pimcore.  
