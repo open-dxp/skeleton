@@ -6,8 +6,6 @@ namespace App\Tests\Unit\Controller;
 use App\Controller\DefaultController;
 use Codeception\Test\Unit;
 use PHPUnit\Framework\MockObject\MockObject;
-use OpenDxp\Config;
-use OpenDxp\Templating\TwigDefaultDelegatingEngine;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
@@ -31,7 +29,7 @@ class DefaultControllerTest extends Unit
 
         $container = new Container();
         $container->set('twig', $this->twig);
-        $container->set('opendxp.templating', new TwigDefaultDelegatingEngine($this->twig, new Config()));
+        $container->set('opendxp.templating', $this->twig);
 
         $this->controller = new DefaultController();
         $this->controller->setContainer($container);
