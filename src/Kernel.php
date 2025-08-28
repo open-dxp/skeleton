@@ -15,8 +15,6 @@
 
 namespace App;
 
-use OpenDxp\Bundle\AdminBundle\OpenDxpAdminBundle;
-use OpenDxp\HttpKernel\BundleCollection\BundleCollection;
 use OpenDxp\Kernel as OpenDxpKernel;
 
 class Kernel extends OpenDxpKernel
