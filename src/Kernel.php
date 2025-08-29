@@ -15,21 +15,8 @@
 
 namespace App;
 
-use OpenDxp\Bundle\AdminBundle\OpenDxpAdminBundle;
-use OpenDxp\HttpKernel\BundleCollection\BundleCollection;
 use OpenDxp\Kernel as OpenDxpKernel;
 
 class Kernel extends OpenDxpKernel
 {
-    /**
-     * Adds bundles to register to the bundle collection. The collection is able
-     * to handle priorities and environment specific bundles.
-     *
-     */
-    public function registerBundlesToCollection(BundleCollection $collection): void
-    {
-        if (class_exists(OpenDxpAdminBundle::class)) {
-            $collection->addBundle(new OpenDxpAdminBundle(), 60);
-        }
-    }
 }
