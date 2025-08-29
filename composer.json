@@ -15,7 +15,6 @@
     "minimum-stability": "dev",
     "require": {
         "open-dxp/opendxp": "*",
-        "open-dxp/admin-ui-classic-bundle": "*",
         "symfony/dotenv": "^7.3",
         "symfony/runtime": "^7.3"
     },
