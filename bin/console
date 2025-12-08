@@ -33,7 +33,7 @@ define('OPENDXP_CONSOLE', true);
 
 Bootstrap::setProjectRoot();
 
-return function (array $context) {
+return static function () {
     $kernel = Bootstrap::startupCli();
 
     return new Application($kernel);
