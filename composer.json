@@ -24,7 +24,8 @@
         "wikimedia/composer-merge-plugin": "^2.1"
     },
     "suggest": {
-        "open-dxp/data-hub-bundle": "Universal data interface for GraphQL, CSV and other formats"
+        "open-dxp/data-hub-bundle": "Universal data interface for GraphQL, CSV and other formats",
+        "symfony/amqp-messenger": "Enables the optional RabbitMQ Messenger transport"
     },
     "autoload": {
         "psr-4": {
