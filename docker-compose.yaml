@@ -3,10 +3,12 @@ services:
         image: redis:alpine
         command: [ redis-server, --maxmemory 128mb, --maxmemory-policy volatile-lru, --save "" ]
 
-    rabbitmq:
-        image: rabbitmq:alpine
-        volumes:
-            - opendxp-rabbitmq:/var/lib/rabbitmq/
+# Optional RabbitMQ: install symfony/amqp-messenger, uncomment the service,
+# enable opendxp-rabbitmq volume, both messenger.yaml mounts, and supervisord dependency.
+#    rabbitmq:
+#        image: rabbitmq:alpine
+#        volumes:
+#            - opendxp-rabbitmq:/var/lib/rabbitmq/
 
     db:
         image: mariadb:10.11
@@ -57,19 +59,19 @@ services:
                 condition: service_healthy
         volumes:
             - .:/var/www/html
-            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
+            #- ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
 
     supervisord:
         #user: '1000:1000' # set to your uid:gid
         image: opendxp/opendxp:php8.3-supervisord-latest
         depends_on:
-            rabbitmq:
-                condition: service_started
+            #rabbitmq:
+            #    condition: service_started
             db:
                 condition: service_healthy
         volumes:
             - .:/var/www/html
-            - ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
+            #- ./.docker/messenger.yaml:/var/www/html/config/packages/messenger.yaml:ro
             - ./.docker/supervisord.conf:/etc/supervisor/conf.d/opendxp.conf:ro
 
     # The following two services are used for testing.
@@ -99,7 +101,7 @@ services:
 
 volumes:
     opendxp-database:
-    opendxp-rabbitmq:
+    #opendxp-rabbitmq:
     opendxp-test-database:
     opendxp-test-var:
     opendxp-test-public-var:
