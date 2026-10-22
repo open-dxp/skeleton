@@ -74,6 +74,7 @@ You don't need to have a PHP environment with composer installed.
    * `docker compose run --rm test-php vendor/bin/opendxp-test install`
    * `docker compose run --rm test-php vendor/bin/pest`
    * `docker compose run --rm test-php vendor/bin/opendxp-test analyse .`
+   * The [OpenDXP testkit](https://github.com/open-dxp/docker-testkit) runs the same tests in an isolated slot, if you use it.
    * Tests are written with [Pest](https://pestphp.com) on top of [open-dxp/test-foundation](https://github.com/open-dxp/test-foundation), see its README
    * Code style: `docker compose exec php vendor/bin/php-cs-fixer fix`
 
@@ -111,10 +112,9 @@ application: the bundles, the data model, the configuration, the document types 
 which OpenDXP mechanism fits a task.
 
 * `AGENTS.md` holds the instructions for every agent, `CLAUDE.md` imports it for Claude Code.
-* After `composer create-project`, and after every `composer install` and `composer update`, run
-  `docker compose exec php vendor/bin/mate discover`. It installs the skills into `.agents/skills` and `.claude/skills`
-  and refreshes the block that Mate manages in `AGENTS.md`. Commit these changes, so that changed skills show up in
-  review.
+* After every `composer install` and `composer update`, the Composer plugin of Mate runs `vendor/bin/mate discover`.
+  It installs the skills into `.agents/skills` and `.claude/skills` and refreshes the block that Mate manages in
+  `AGENTS.md`. Commit these changes, so that changed skills show up in review.
 * The agent runs Mate through the `php` container: `docker compose exec -T php vendor/bin/mate tools:list`
 
 Mate and its extensions are development dependencies. Never deploy them.

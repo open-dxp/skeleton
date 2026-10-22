@@ -19,13 +19,11 @@ keeps Docker from asking for a terminal, which an agent does not have.
 | Run the tests              | `docker compose run --rm -T test-php vendor/bin/pest`                                         |
 | Static analysis            | `docker compose run --rm -T test-php vendor/bin/opendxp-test analyse .`                       |
 | Code style                 | `docker compose exec -T php vendor/bin/php-cs-fixer fix`                                      |
-| Refresh Mate skills        | `docker compose exec -T php vendor/bin/mate discover`                                         |
 
 A project that runs on DDEV uses `ddev exec <command>` and `ddev composer <command>` instead. There, prefix the test
 and analysis commands with `APP_ENV=test`, see `README.md`.
 
-Before you report a change as done, run the code style, the static analysis and the tests. After `composer install` or
-`composer update`, refresh the Mate skills.
+Before you report a change as done, run the code style, the static analysis and the tests.
 
 ## Never edit these by hand
 
@@ -48,6 +46,8 @@ Tests are written with Pest on top of `open-dxp/test-foundation`. Load the skill
 
 - `tests/Unit/` boots nothing.
 - `tests/Feature/` boots the application. Every test runs in a database transaction that is rolled back.
+
+If the tools of the opendxp-testkit MCP server are available, run the tests and the analysis with them.
 
 ## Project specifics
 
