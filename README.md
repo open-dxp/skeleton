@@ -21,7 +21,8 @@ cd ./my-project
 ```
 
 - Point your virtual host to `my-project/public`
-- [Only for Apache] Create `my-project/public/.htaccess` according to docs/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration/ 
+- [Only for Apache] Create `my-project/public/.htaccess` according to [Apache Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration)
+- [Only for Nginx] Configure the server according to [Nginx Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Nginx_Configuration)
 - Open https://your-host/admin in your browser
 - Done!
 
@@ -63,6 +64,7 @@ You don't need to have a PHP environment with composer installed.
 3. Part of the new project is a docker compose file
     * Run `sed -i "s|#user: '1000:1000'|user: '$(id -u):$(id -g)'|g" docker-compose.yaml` to set the correct user id and group id.
     * Start the needed services with `docker compose up -d`
+    * The nginx service uses `.docker/nginx.conf`, based on the [Nginx Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Nginx_Configuration) of the OpenDXP docs.
 
 4. Install OpenDXP and initialize the DB
     `docker compose exec php vendor/bin/opendxp-install`
@@ -87,7 +89,9 @@ You don't need to have a PHP environment with composer installed.
 ## DDEV
 
 The project also ships a [DDEV](https://ddev.com) configuration in `.ddev/`. It runs the same PHP version, database, workers and
-nginx rules as the Docker setup above.
+nginx rules as the Docker setup above. `.ddev/nginx_full/nginx-site.conf` holds the same rules as `.docker/nginx.conf`, see
+[Nginx Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Nginx_Configuration);
+change both together.
 
 ```bash
 ddev start
