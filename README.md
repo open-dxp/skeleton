@@ -69,15 +69,76 @@ You don't need to have a PHP environment with composer installed.
     * This can take a while, up to 20 minutes
     * If you select to install the SimpleBackendSearchBundle please make sure to add the `opendxp_search_backend_message` to your `.docker/supervisord.conf` file inside value for 'command' like `opendxp_maintenance` already is.
 
-5. Run codeception tests:
+5. Run the tests and the static analysis:
    * `docker compose run --user=root --rm test-php chown -R $(id -u):$(id -g) var/ public/var/`
-   * `docker compose run --rm test-php vendor/bin/opendxp-install -n`
-   * `docker compose run --rm test-php vendor/bin/codecept run -vv`
+   * `docker compose run --rm test-php vendor/bin/opendxp-test install`
+   * `docker compose run --rm test-php vendor/bin/pest`
+   * `docker compose run --rm test-php vendor/bin/opendxp-test analyse .`
+   * Tests are written with [Pest](https://pestphp.com) on top of [open-dxp/test-foundation](https://github.com/open-dxp/test-foundation), see its README
+   * Code style: `docker compose exec php vendor/bin/php-cs-fixer fix`
 
 6. :heavy_check_mark: DONE - You can now visit your OpenDXP instance:
     * The frontend: <http://localhost>
     * The admin interface, using the credentials you have chosen above:
       <http://localhost/admin>
+
+## DDEV
+
+The project also ships a [DDEV](https://ddev.com) configuration in `.ddev/`. It runs the same PHP version, database, workers and
+nginx rules as the Docker setup above.
+
+```bash
+ddev start
+ddev composer install
+ddev exec vendor/bin/opendxp-install
+ddev restart # starts the messenger workers and the maintenance job, which need the installed application
+```
+
+Tests and static analysis run against a separate `opendxp_test` database that DDEV creates on start. DDEV runs
+the application in `dev`, so these commands set the `test` environment themselves:
+
+```bash
+ddev exec APP_ENV=test vendor/bin/opendxp-test install
+ddev exec APP_ENV=test vendor/bin/pest
+ddev exec APP_ENV=test vendor/bin/opendxp-test analyse .
+```
+
+## AI agents
+
+The project is prepared for coding agents with [Symfony AI Mate](https://symfony.com/doc/current/ai/components/mate.html)
+and the [OpenDXP Mate extension](https://github.com/open-dxp/mate-extension). Its tools answer from the booted
+application: the bundles, the data model, the configuration, the document types and areabricks. Its skills tell the agent
+which OpenDXP mechanism fits a task.
+
+* `AGENTS.md` holds the instructions for every agent, `CLAUDE.md` imports it for Claude Code.
+* After `composer create-project`, and after every `composer install` and `composer update`, run
+  `docker compose exec php vendor/bin/mate discover`. It installs the skills into `.agents/skills` and `.claude/skills`
+  and refreshes the block that Mate manages in `AGENTS.md`. Commit these changes, so that changed skills show up in
+  review.
+* The agent runs Mate through the `php` container: `docker compose exec -T php vendor/bin/mate tools:list`
+
+Mate and its extensions are development dependencies. Never deploy them.
+
+### Optional: Symfony tools for the agent
+
+The [Symfony extension](https://symfony.com/doc/current/ai/components/mate.html) of Mate adds tools that read the
+container and the profiler, such as `symfony-services` and `symfony-profiler-list`. The `opendxp-dev` skill uses them
+when they are installed:
+
+```bash
+docker compose exec php composer require --dev symfony/ai-symfony-mate-extension
+docker compose exec php vendor/bin/mate discover
+```
+
+### Using Mate with DDEV
+
+Set the command in `mate/config.php`:
+
+```php
+->set('mate.invocation', 'ddev exec vendor/bin/mate')
+```
+
+Then run `ddev exec vendor/bin/mate discover` to write the new command into `AGENTS.md`.
 
 ***
 

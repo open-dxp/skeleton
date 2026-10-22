@@ -1,54 +1,28 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Controller;
 
 use App\Controller\DefaultController;
-use Codeception\Test\Unit;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
-/**
- * This basic unit test demonstrates how to unit-test a controller using mocked twig engine.
- */
-class DefaultControllerTest extends Unit
-{
-    private DefaultController $controller;
+it('renders the default template', function () {
+    $twig = new Environment(new ArrayLoader([
+        'default/default.html.twig' => 'At OpenDXP we love writing tests!',
+    ]));
 
-    private MockObject|Environment $twig;
+    $container = new Container();
+    $container->set('twig', $twig);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
+    $controller = new DefaultController();
+    $controller->setContainer($container);
 
-        // Create a test double for twig engine.
-        // See: https://phpunit.readthedocs.io/en/9.5/test-doubles.html
-        $this->twig = $this->createMock(Environment::class);
+    $response = $controller->defaultAction(Request::create('/'));
 
-        $container = new Container();
-        $container->set('twig', $this->twig);
-        $container->set('opendxp.templating', $this->twig);
-
-        $this->controller = new DefaultController();
-        $this->controller->setContainer($container);
-    }
-
-    public function testDefaultAction(): void
-    {
-        $this->twig->method('render')->willReturnMap([
-            // Simulate rendering of default template.
-            ['default/default.html.twig', [], 'At opendxp we love writing tests!'],
-        ]);
-
-        $response = $this->controller->defaultAction($this->createMock(Request::class));
-
-        self::assertEquals(200, $response->getStatusCode());
-        self::assertStringContainsStringIgnoringCase('opendxp', $response->getContent());
-        self::assertStringContainsStringIgnoringCase('tests', $response->getContent());
-        self::assertStringNotContainsStringIgnoringCase('bugs', $response->getContent());
-        self::assertStringNotContainsStringIgnoringCase('hacks', $response->getContent());
-        self::assertStringNotContainsStringIgnoringCase('💩', $response->getContent());
-    }
-}
+    expect($response->getStatusCode())->toBe(200)
+        ->and($response->getContent())->toBe('At OpenDXP we love writing tests!');
+});

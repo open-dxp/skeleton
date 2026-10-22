@@ -1,0 +1,47 @@
+type: php
+name: 'opendxp-skeleton'
+docroot: public
+php_version: "8.3"
+webserver_type: nginx-fpm
+database:
+    type: mariadb
+    version: "10.11"
+composer_version: "2"
+
+# Binaries OpenDXP uses for thumbnails, metadata, previews and video; the PHP extensions ship with DDEV.
+webimage_extra_packages:
+    - libimage-exiftool-perl
+    - ffmpeg
+    - jpegoptim
+    - optipng
+    - pngquant
+    - poppler-utils
+    - webp
+
+web_environment:
+    - OPENDXP_INSTALL_MYSQL_HOST_SOCKET=db
+    - OPENDXP_INSTALL_MYSQL_PORT=3306
+    - OPENDXP_INSTALL_MYSQL_USERNAME=db
+    - OPENDXP_INSTALL_MYSQL_PASSWORD=db
+    - OPENDXP_INSTALL_MYSQL_DATABASE=db
+    - DATABASE_SERVER_VERSION=mariadb-10.11.0
+    # Only the test environment reads it, see config/packages/test/config.yaml.
+    - DATABASE_URL=mysql://db:db@db:3306/opendxp_test
+
+# The same workers as the supervisord service in docker-compose.yaml.
+web_extra_daemons:
+    -   name: messenger-consume
+        command: php bin/console messenger:consume opendxp_core opendxp_maintenance opendxp_scheduled_tasks opendxp_image_optimize --memory-limit=250M --time-limit=3600
+        directory: /var/www/html
+    -   name: consume-asset-update
+        command: php bin/console messenger:consume opendxp_asset_update --memory-limit=250M --time-limit=3600
+        directory: /var/www/html
+    -   name: maintenance
+        command: bash -c 'sleep 3600 && exec php bin/console opendxp:maintenance'
+        directory: /var/www/html
+
+hooks:
+    post-start:
+        # The tests run against their own database, see DATABASE_URL above.
+        -   exec: mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS opendxp_test CHARSET=utf8mb4; GRANT ALL PRIVILEGES ON opendxp_test.* TO 'db'@'%';"
+            service: db

@@ -1,2 +1,6 @@
-
 * -text
+
+/.github export-ignore
+/MODERNIZATION_PLAN.md export-ignore
+/SECURITY.md export-ignore
+/catalog-info.yaml export-ignore

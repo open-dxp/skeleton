@@ -1,35 +1,25 @@
-name: PHP-CS-Fixer
+name: PHP-CS-Fixer [centralised]
 
 on:
-    pull_request_target:
-        branches:
-            - "[0-9]+.[0-9]+"
-            - "[0-9]+.x"
-            - "feature-*"
+    workflow_dispatch:
     push:
         branches:
             - "[0-9]+.[0-9]+"
             - "[0-9]+.x"
-            - "*_actions"
-            - "feature-*"
 
 permissions:
-    contents: read
+    contents: write
 
 jobs:
-    php-cs-fixer:
-        permissions:
-            contents: write  # for stefanzweifel/git-auto-commit-action to push code in repo
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  ref: ${{ github.event.pull_request.head.ref }}
-                  repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-            - name: PHP-CS-Fixer
-              uses: docker://oskarstark/php-cs-fixer-ga:latest
-
-            - uses: stefanzweifel/git-auto-commit-action@v5
-              with:
-                  commit_message: Apply php-cs-fixer changes
+    php-style:
+        uses: open-dxp/workflows-collection-public/.github/workflows/reusable-php-cs-fixer.yaml@main
+        if: github.repository_owner == 'open-dxp'
+        secrets:
+            PHP_CS_FIXER_GITHUB_TOKEN: ${{ secrets.PHP_CS_FIXER_GITHUB_TOKEN }}
+        with:
+            head_ref: ${{ github.event.pull_request.head.ref }}
+            repository: ${{ github.event.pull_request.head.repo.full_name }}
+            enable_auto_commit: true
+            # The global configs stamp an OpenDXP licence header, which does not belong into project code.
+            use_global_config: false
+            config_file: .php-cs-fixer.dist.php
