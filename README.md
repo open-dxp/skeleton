@@ -33,10 +33,11 @@ doctrine:
     dbal:
         connections:
             default:
-                server_version: '%env(default:8.0:DATABASE_SERVER_VERSION)%'
+                server_version: '%env(string:default:default_database_server_version:DATABASE_SERVER_VERSION)%'
 ```
 
-If you're using a different database version, you can override this in your `.env` or `.env.local`:
+The default comes from the `default_database_server_version` parameter in `config/services.yaml`.
+If you're using a different database version, change that parameter or override it in your `.env` or `.env.local`:
 
 ```dotenv
 DATABASE_SERVER_VERSION=mariadb-10.11.13
@@ -53,8 +54,8 @@ You don't need to have a PHP environment with composer installed.
 * Your user must be allowed to change file permissions (directly or via sudo).
 
 ### Follow these steps
-1. Initialize the skeleton project using the `open-dxp/opendxp` image
-``docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html open-dxp/opendxp:php8.3-latest composer create-project open-dxp/skeleton my-project``
+1. Initialize the skeleton project using the `opendxp/opendxp` image
+``docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html opendxp/opendxp:php8.3-latest composer create-project open-dxp/skeleton my-project``
 
 2. Go to your new project
 `cd my-project/`
@@ -67,7 +68,7 @@ You don't need to have a PHP environment with composer installed.
     `docker compose exec php vendor/bin/opendxp-install`
     * When asked for admin user and password: Choose freely
     * This can take a while, up to 20 minutes
-    * If you select to install the SimpleBackendSearchBundle please make sure to add the `opendxp_search_backend_message` to your `.docker/supervisord.conf` file inside value for 'command' like `opendxp_maintenance` already is.
+    * If you select to install the SimpleBackendSearchBundle please make sure to add the `opendxp_search_backend_message` to your `.docker/supervisord.conf` file inside value for 'command' like `opendxp_maintenance` already is. With DDEV, add it to the `messenger-consume` daemon in `.ddev/config.yaml`.
 
 5. Run the tests and the static analysis:
    * `docker compose run --user=root --rm test-php chown -R $(id -u):$(id -g) var/ public/var/`
@@ -122,7 +123,7 @@ Mate and its extensions are development dependencies. Never deploy them.
 ### Optional: Symfony tools for the agent
 
 The [Symfony extension](https://symfony.com/doc/current/ai/components/mate.html) of Mate adds tools that read the
-container and the profiler, such as `symfony-services` and `symfony-profiler-list`. The `opendxp-dev` skill uses them
+container and the profiler, such as `symfony-services` and `symfony-profiler-list`. The `mate-opendxp-dev` skill uses them
 when they are installed:
 
 ```bash

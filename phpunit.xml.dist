@@ -13,6 +13,7 @@
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
         <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension"/>
+        <bootstrap class="OpenDxp\TestFoundation\PHPUnit\InstallDefinitions"/>
     </extensions>
     <php>
         <server name="APP_ENV" value="test" force="true"/>

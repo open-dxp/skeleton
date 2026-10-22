@@ -22,7 +22,7 @@ what you need.
 ### OpenDXP
 
 These tools read the OpenDXP installation you work on. They boot its kernel, so every answer
-matches the installed versions, classes and configuration. Load the skill `opendxp-dev` before you
+matches the installed versions, classes and configuration. Load the skill `mate-opendxp-dev` before you
 write OpenDXP code. It says when to call which tool and which skill covers the task.
 
 | Tool                       | Use it when                                                                                      |

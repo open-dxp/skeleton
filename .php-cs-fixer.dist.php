@@ -16,7 +16,7 @@ return (new PhpCsFixer\Config())
 
         'blank_line_before_statement'         => true,
         'encoding'                            => true,
-        'function_typehint_space'             => true,
+        'type_declaration_spaces'             => true,
         'single_line_comment_style'           => true,
         'lowercase_cast'                      => true,
         'magic_constant_casing'               => true,
@@ -52,7 +52,7 @@ return (new PhpCsFixer\Config())
         'phpdoc_trim'                         => true,
         'return_type_declaration'             => true,
         'short_scalar_cast'                   => true,
-        'single_blank_line_before_namespace'  => true,
+        'blank_lines_before_namespace'        => true,
         'single_quote'                        => true,
         'space_after_semicolon'               => true,
         'standardize_not_equals'              => true,
