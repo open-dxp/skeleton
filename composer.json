@@ -23,7 +23,7 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95",
         "open-dxp/mate-extension": "^1.0",
-        "open-dxp/test-foundation": "^1.2.1",
+        "open-dxp/test-foundation": "^1.2.2",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-strict-rules": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",
