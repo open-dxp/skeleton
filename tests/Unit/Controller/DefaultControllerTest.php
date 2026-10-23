@@ -11,6 +11,7 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
 it('renders the default template', function () {
+
     $twig = new Environment(new ArrayLoader([
         'default/default.html.twig' => 'At OpenDXP we love writing tests!',
     ]));
@@ -23,6 +24,8 @@ it('renders the default template', function () {
 
     $response = $controller->defaultAction(Request::create('/'));
 
-    expect($response->getStatusCode())->toBe(200)
-        ->and($response->getContent())->toBe('At OpenDXP we love writing tests!');
+    expect($response->getStatusCode())
+        ->toBe(200)
+        ->and($response->getContent())
+        ->toBe('At OpenDXP we love writing tests!');
 });

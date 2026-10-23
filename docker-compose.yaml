@@ -89,7 +89,7 @@ services:
         environment:
             APP_ENV: test
             DATABASE_URL: mysql://opendxp:opendxp@test-db/opendxp
-            DATABASE_SERVER_VERSION: mariadb-10.11.0
+            DATABASE_SERVER_VERSION: 10.11.0-MariaDB
             OPENDXP_INSTALL_MYSQL_HOST_SOCKET: test-db
         depends_on:
             test-db:

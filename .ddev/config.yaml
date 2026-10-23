@@ -24,7 +24,7 @@ web_environment:
     - OPENDXP_INSTALL_MYSQL_USERNAME=db
     - OPENDXP_INSTALL_MYSQL_PASSWORD=db
     - OPENDXP_INSTALL_MYSQL_DATABASE=db
-    - DATABASE_SERVER_VERSION=mariadb-10.11.0
+    - DATABASE_SERVER_VERSION=10.11.0-MariaDB
     # Only the test environment reads it, see config/packages/test/config.yaml.
     - DATABASE_URL=mysql://db:db@db:3306/opendxp_test
 

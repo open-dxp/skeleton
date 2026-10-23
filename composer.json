@@ -42,8 +42,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/",
-            "Mate\\": "mate/src/"
+            "App\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -74,15 +73,6 @@
             "merge-extra-deep": false,
             "merge-replace": true,
             "merge-scripts": false
-        },
-        "ai-mate": {
-            "extension": false,
-            "scan-dirs": [
-                "mate/src"
-            ],
-            "includes": [
-                "mate/config.php"
-            ]
         }
     }
 }
