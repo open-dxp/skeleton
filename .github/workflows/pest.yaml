@@ -1,45 +1,43 @@
-name: Test OpenDXP Skeleton
+name: Pest tests
 
 on:
     workflow_dispatch:
-    pull_request:
-        branches:
-            - "[0-9]+.[0-9]+"
-            - "[0-9]+.x"
     push:
         branches:
             - "[0-9]+.[0-9]+"
             - "[0-9]+.x"
             - "*_actions"
+        paths-ignore:
+            - '**.md'
+            - 'doc/**'
+            - 'docs/**'
+    pull_request:
+        types: [ opened, synchronize, reopened ]
+        paths-ignore:
+            - '**.md'
+            - 'doc/**'
+            - 'docs/**'
 
 jobs:
     test-opendxp-skeleton:
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v7
                 with:
                     path: 'skeleton'
-
-            -   name: Pull latest opendxp image
-                run: |
-                    # Echo commands and terminate on first error
-                    set -ex
-                    
-                    # Pull latest build of opendxp's image
-                    docker pull docker.io/opendxp/opendxp:php8.2-latest
 
             -   name: Create project from skeleton in latest opendxp environment
                 run: |
                     # Echo commands and terminate on first error
                     set -ex
-                    
+
                     # Try creating a new project with composer using contents of this repo as the package.
-                    # We execute composer within docker container to suttisfy platform requirements.
-                    # The value of ´"url":` must match checkout path in the first step.
+                    # We execute composer within docker container to satisfy platform requirements.
+                    # The value of `"url":` must match checkout path in the first step.
                     #
                     # See: https://getcomposer.org/doc/03-cli.md#create-project
                     # See: https://getcomposer.org/doc/05-repositories.md#path
-                    
+
                     docker run \
                       --volume=${{ github.workspace }}/:/test/ \
                       --workdir=/test/ \
@@ -54,7 +52,7 @@ jobs:
                 run: |
                     # Echo commands and terminate on first error
                     set -ex
-                    
+
                     # Check (lint) the compose file
                     docker compose version
                     cd sample-project/
@@ -64,16 +62,16 @@ jobs:
                 run: |
                     # Echo commands and terminate on first error
                     set -ex
-                    
+
                     cd sample-project/
-                    
+
                     # Set up docker-compose.yaml to use current user's uid:gid, just like README.md suggests.
                     sed -i "s|#user: '1000:1000'|user: '$(id -u):$(id -g)'|g" docker-compose.yaml
-                    
+
                     # Start containers
                     docker compose pull --quiet
                     docker compose up -d
-                    
+
                     # Run opendxp installation.
                     docker compose exec -T \
                     -e OPENDXP_INSTALL_ADMIN_USERNAME=opendxp \
@@ -81,14 +79,30 @@ jobs:
                     -- \
                     php vendor/bin/opendxp-install -n
 
-            -   name: Run codeception tests
+            -   name: Install the test application
                 run: |
                     # Echo commands and terminate on first error
                     set -ex
-                    
+
                     cd sample-project/
-                    
-                    # Set up and execute codeception tests, just like README.md suggests.
+
+                    # Same commands as README.md suggests.
                     docker compose run --user=root --rm test-php chown -R $(id -u):$(id -g) var/ public/var/
-                    docker compose run --rm -T test-php vendor/bin/opendxp-install -n
-                    docker compose run --rm -T test-php vendor/bin/codecept run -vv
+                    docker compose run --rm -T test-php vendor/bin/opendxp-test install
+
+            -   name: Run static analysis
+                run: |
+                    cd sample-project/
+                    docker compose run --rm -T test-php vendor/bin/opendxp-test analyse .
+
+            -   name: Run Pest tests
+                run: |
+                    cd sample-project/
+                    docker compose run --rm -T test-php vendor/bin/pest
+
+            -   name: Print logs
+                if: failure()
+                run: |
+                    cd sample-project/
+                    # The test application writes its logs into a docker volume, not into the checkout.
+                    docker compose run --rm -T test-php sh -c 'tail -n 200 var/log/*.log' || true

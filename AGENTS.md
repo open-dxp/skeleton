@@ -1,0 +1,54 @@
+# AGENTS.md
+
+## Project
+
+An OpenDXP 1.x project on Symfony 7.4 and PHP 8.3+. Load the skill `mate-opendxp-dev` before you write OpenDXP code.
+
+## Run every command in the container
+
+The application, its PHP and its database live in Docker. Never run PHP, Composer or the console on the host. `-T`
+keeps Docker from asking for a terminal, which an agent does not have.
+
+| Task                       | Command                                                                                       |
+|----------------------------|-----------------------------------------------------------------------------------------------|
+| Console                    | `docker compose exec -T php bin/console <command>`                                            |
+| Composer                   | `docker compose exec -T php composer <command>`                                               |
+| Clear the caches           | `bin/console cache:clear` and `bin/console opendxp:cache:clear`                               |
+| Own the test volumes, once | `docker compose run --rm -T --user=root test-php chown -R $(id -u):$(id -g) var/ public/var/` |
+| Install the tests          | `docker compose run --rm -T test-php vendor/bin/opendxp-test install`                         |
+| Run the tests              | `docker compose run --rm -T test-php vendor/bin/pest`                                         |
+| Static analysis            | `docker compose run --rm -T test-php vendor/bin/opendxp-test analyse .`                       |
+| Code style                 | `docker compose exec -T php vendor/bin/php-cs-fixer fix`                                      |
+
+A project that runs on DDEV uses `ddev exec <command>` and `ddev composer <command>` instead. There, prefix the test
+and analysis commands with `APP_ENV=test`, see `README.md`.
+
+Before you report a change as done, run the code style, the static analysis and the tests. 
+
+## Never edit these by hand
+
+- `var/classes/`: the data object classes. Change a class in the admin, or rebuild it with
+  `bin/console opendxp:deployment:classes-rebuild`.
+- `var/config/`: configuration the admin writes. The skill `mate-opendxp-configuration` explains where each type is stored.
+- `public/bundles/`: assets that `composer install` copies.
+- The block between the `AI_MATE_INSTRUCTIONS` markers below, `mate/AGENT_INSTRUCTIONS.md`, `.agents/skills/` and
+  `.claude/skills/`: `vendor/bin/mate discover` regenerates them.
+
+## Never do this
+
+- `bin/console doctrine:schema:update --force`: it drops the tables of OpenDXP. Write a migration.
+- Commit `.env.local`, `config/local/` or `composer.local.json`. They hold local settings.
+- Move a development package, such as Mate, the test foundation or PHPStan, into `require`.
+
+## Tests
+
+Tests are written with Pest on top of `open-dxp/test-foundation`. Load the skill `mate-opendxp-tests` before you write one.
+
+- `tests/Unit/` boots nothing.
+- `tests/Feature/` boots the application. Every test runs in a database transaction that is rolled back.
+
+If the tools of the opendxp-testkit MCP server are available, run the tests and the analysis with them.
+
+## Project specifics
+
+<!-- Describe the domain, the deployment and the conventions of this project here. -->

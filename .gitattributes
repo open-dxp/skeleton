@@ -1,2 +1,5 @@
-
 * -text
+
+/.github export-ignore
+/SECURITY.md export-ignore
+/catalog-info.yaml export-ignore

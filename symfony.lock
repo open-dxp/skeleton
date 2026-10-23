@@ -1,10 +1,4 @@
 {
-    "codeception/codeception": {
-        "version": "99999",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib"
-        }
-    },
     "doctrine/annotations": {
         "version": "99999",
         "recipe": {

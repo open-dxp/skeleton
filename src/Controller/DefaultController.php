@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use OpenDxp\Bundle\AdminBundle\Controller\Admin\LoginController;
@@ -14,9 +16,6 @@ class DefaultController extends FrontendController
         return $this->render('default/default.html.twig');
     }
 
-    /**
-     * Forwards the request to admin login
-     */
     public function loginAction(): Response
     {
         return $this->forward(LoginController::class.'::loginCheckAction');

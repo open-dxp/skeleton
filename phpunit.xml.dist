@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/open-dxp/test-foundation/bootstrap.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache">
+    <testsuites>
+        <testsuite name="project">
+            <directory>tests/Feature</directory>
+            <directory>tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <extensions>
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+        <bootstrap class="Zenstruck\Foundry\PHPUnit\FoundryExtension"/>
+        <bootstrap class="OpenDxp\TestFoundation\PHPUnit\InstallDefinitions"/>
+    </extensions>
+    <php>
+        <server name="APP_ENV" value="test" force="true"/>
+        <env name="KERNEL_CLASS" value="App\Tests\TestKernel"/>
+    </php>
+</phpunit>

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * OpenDXP
  *
@@ -15,6 +17,7 @@
 
 namespace App\Controller;
 
+use Exception;
 use OpenDxp\Controller\FrontendController;
 use OpenDxp\Model\Document\Hardlink;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +28,7 @@ class Web2printController extends FrontendController
     public function defaultAction(Request $request): Response
     {
         $paramsBag = [
-            'document' => $this->document
+            'document' => $this->document,
         ];
 
         foreach ($request->attributes as $key => $value) {
@@ -34,7 +37,7 @@ class Web2printController extends FrontendController
 
         $paramsBag = array_merge($request->request->all(), $request->query->all(), $paramsBag);
 
-        if ($this->document->getProperty('hide-layout')) {
+        if ((bool) $this->document->getProperty('hide-layout')) {
             return $this->render('web2print/default_no_layout.html.twig', $paramsBag);
         } else {
             return $this->render('web2print/default.html.twig', $paramsBag);
@@ -42,12 +45,12 @@ class Web2printController extends FrontendController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function containerAction(Request $request): Response
     {
         $paramsBag = [
-            'document' => $this->document
+            'document' => $this->document,
         ];
 
         foreach ($request->attributes as $key => $value) {
@@ -56,7 +59,6 @@ class Web2printController extends FrontendController
 
         $allChildren = [];
 
-        //prepare children for include
         foreach ($this->document->getAllChildren() as $child) {
             if ($child instanceof Hardlink) {
                 $child = Hardlink\Service::wrap($child);

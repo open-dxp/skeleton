@@ -14,16 +14,57 @@ This skeleton should be used by experienced OpenDXP developers for starting a ne
 ***
 
 ## Getting started
+
+Create the project. Docker is enough, you need no PHP on your machine:
+
 ```bash
-COMPOSER_MEMORY_LIMIT=-1 composer create-project open-dxp/skeleton my-project
-cd ./my-project
-./vendor/bin/opendxp-install
+docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html opendxp/opendxp:php8.3-latest composer create-project open-dxp/skeleton my-project
+cd my-project
 ```
 
+With PHP and Composer on your machine, `COMPOSER_MEMORY_LIMIT=-1 composer create-project open-dxp/skeleton my-project` does the same.
+
+The project runs with Docker Compose or with DDEV. Both run the same PHP version, database, workers and nginx rules. Choose wisely.
+
+### Docker
+
+Your user must be allowed to run Docker and Docker Compose, and to change file permissions.
+
+```bash
+sed -i "s|#user: '1000:1000'|user: '$(id -u):$(id -g)'|g" docker-compose.yaml
+docker compose up -d
+docker compose exec php vendor/bin/opendxp-install
+```
+
+Open the frontend at <http://localhost> and the admin at <http://localhost/admin>.
+
+### DDEV
+
+```bash
+ddev config --project-name=my-project
+ddev start
+ddev exec vendor/bin/opendxp-install
+ddev restart # starts the messenger workers and the maintenance job, which need the installed application
+```
+
+Open the frontend at <https://my-project.ddev.site> and the admin at <https://my-project.ddev.site/admin>.
+
+### Installation notes
+
+- `opendxp-install` asks for the admin user and password. Choose them freely. The installation can take up to 20 minutes.
+  - If you install the SimpleBackendSearchBundle, add `opendxp_search_backend_message` to the workers. 
+    - With Docker, add it to the `command` in `.docker/supervisord.conf`, like `opendxp_maintenance`. 
+    - With DDEV, add it to the `messenger-consume` daemon in `.ddev/config.yaml`.
+- `.docker/nginx.conf` and `.ddev/nginx_full/nginx-site.conf` hold the same rules, see
+  [Nginx Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Nginx_Configuration).
+
+### Your own web server
+
+- Run `./vendor/bin/opendxp-install`
 - Point your virtual host to `my-project/public`
-- [Only for Apache] Create `my-project/public/.htaccess` according to docs/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration/ 
+- [Only for Apache] Create `my-project/public/.htaccess` according to [Apache Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Apache_Configuration)
+- [Only for Nginx] Configure the server according to [Nginx Configuration](https://docs.opendxp.io/docs/core-framework/Installation_and_Upgrade/System_Setup_and_Hosting/Nginx_Configuration)
 - Open https://your-host/admin in your browser
-- Done!
 
 ## Note for first-time setup
 To allow cache:clear and other commands to run without an active database connection, the default configuration sets:
@@ -33,51 +74,56 @@ doctrine:
     dbal:
         connections:
             default:
-                server_version: '%env(default:8.0:DATABASE_SERVER_VERSION)%'
+                server_version: '%env(string:default:default_database_server_version:DATABASE_SERVER_VERSION)%'
 ```
 
-If you're using a different database version, you can override this in your `.env` or `.env.local`:
+The default comes from the `default_database_server_version` parameter in `config/services.yaml`.
+If you're using a different database version, change that parameter or override it in your `.env` or `.env.local`:
 
 ```dotenv
-DATABASE_SERVER_VERSION=mariadb-10.11.13
+DATABASE_SERVER_VERSION=10.11.13-MariaDB
 ```
 
-## Docker
+## Tests and code style
 
-You can also use Docker to set up a new OpenDXP Installation.
-You don't need to have a PHP environment with composer installed.
+Tests are written with [Pest](https://pestphp.com) on top of
+[open-dxp/test-foundation](https://github.com/open-dxp/test-foundation), see its README. They run against a database of their own.
+[Testing a Project](https://docs.opendxp.io/docs/core-framework/Development_Tools_and_Details/Testing/Testing_a_Project/)
+shows how a project tests its own code and the bundles it uses.
 
-### Prerequisites
-* Your user must be allowed to run docker commands (directly or via sudo).
-* You must have docker compose installed.
-* Your user must be allowed to change file permissions (directly or via sudo).
+### Docker
 
-### Follow these steps
-1. Initialize the skeleton project using the `open-dxp/opendxp` image
-``docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html open-dxp/opendxp:php8.3-latest composer create-project open-dxp/skeleton my-project``
+```bash
+docker compose run --user=root --rm test-php chown -R $(id -u):$(id -g) var/ public/var/ # once
+docker compose run --rm test-php vendor/bin/opendxp-test install
+docker compose run --rm test-php vendor/bin/pest
+docker compose run --rm test-php vendor/bin/opendxp-test analyse .
+docker compose exec php vendor/bin/php-cs-fixer fix
+```
 
-2. Go to your new project
-`cd my-project/`
+### DDEV
 
-3. Part of the new project is a docker compose file
-    * Run `sed -i "s|#user: '1000:1000'|user: '$(id -u):$(id -g)'|g" docker-compose.yaml` to set the correct user id and group id.
-    * Start the needed services with `docker compose up -d`
+DDEV creates the `opendxp_test` database on start. It runs the application in `dev`, so the test commands set the `test` environment themselves:
 
-4. Install OpenDXP and initialize the DB
-    `docker compose exec php vendor/bin/opendxp-install`
-    * When asked for admin user and password: Choose freely
-    * This can take a while, up to 20 minutes
-    * If you select to install the SimpleBackendSearchBundle please make sure to add the `opendxp_search_backend_message` to your `.docker/supervisord.conf` file inside value for 'command' like `opendxp_maintenance` already is.
+```bash
+ddev exec APP_ENV=test vendor/bin/opendxp-test install
+ddev exec APP_ENV=test vendor/bin/pest
+ddev exec APP_ENV=test vendor/bin/opendxp-test analyse .
+ddev exec vendor/bin/php-cs-fixer fix
+```
 
-5. Run codeception tests:
-   * `docker compose run --user=root --rm test-php chown -R $(id -u):$(id -g) var/ public/var/`
-   * `docker compose run --rm test-php vendor/bin/opendxp-install -n`
-   * `docker compose run --rm test-php vendor/bin/codecept run -vv`
+The [OpenDXP testkit](https://github.com/open-dxp/docker-testkit) runs the same tests in an isolated slot, if you use it.
 
-6. :heavy_check_mark: DONE - You can now visit your OpenDXP instance:
-    * The frontend: <http://localhost>
-    * The admin interface, using the credentials you have chosen above:
-      <http://localhost/admin>
+## AI agents
+
+The project is prepared for coding agents with [Symfony AI Mate](https://symfony.com/doc/current/ai/components/mate.html)
+and the [OpenDXP Mate extension](https://github.com/open-dxp/mate-extension). The tools of the extension answer from
+the booted application. Its skills tell the agent which OpenDXP mechanism fits a task.
+
+The extension is already installed. Set Mate up once with `mate init`, as the
+[installation of the Mate extension](https://github.com/open-dxp/mate-extension#installation) describes for Docker and
+DDEV. In this project, the Docker service that runs PHP is called `php`. The installation also describes the optional
+Symfony tools for the agent.
 
 ***
 
@@ -89,7 +135,7 @@ Licensed under the GNU General Public License v3.0 (GPLv3). For details, please 
 
 ## Copyright
 © Pimcore GmbH  
-© 2025 OpenDXP Contributors — GPLv3
+© 2026 OpenDXP Contributors — GPLv3
 
 ## Trademarks
 Pimcore® is a registered [trademark](https://www.trademarkelite.com/europe/trademark/trademark-detail/009309841/PIMCORE) of Pimcore GmbH.
