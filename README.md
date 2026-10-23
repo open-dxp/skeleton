@@ -117,54 +117,13 @@ The [OpenDXP testkit](https://github.com/open-dxp/docker-testkit) runs the same 
 ## AI agents
 
 The project is prepared for coding agents with [Symfony AI Mate](https://symfony.com/doc/current/ai/components/mate.html)
-and the [OpenDXP Mate extension](https://github.com/open-dxp/mate-extension). Its tools answer from the booted
-application: the bundles, the data model, the configuration, the document types and areabricks. Its skills tell the agent
-which OpenDXP mechanism fits a task.
+and the [OpenDXP Mate extension](https://github.com/open-dxp/mate-extension). The tools of the extension answer from
+the booted application. Its skills tell the agent which OpenDXP mechanism fits a task.
 
-Set Mate up once with `mate init` and `mate discover`. `mate init` creates `mate/`, adds its configuration to
-`composer.json` and its instructions to `AGENTS.md`. It also creates a `CLAUDE.md` that imports `AGENTS.md` for Claude
-Code. `mate discover` installs the skills into `.agents/skills` and `.claude/skills` and refreshes the instructions.
-Run it again after every `composer install` and `composer update`.
-
-Mate and its extensions are development dependencies. Never deploy them.
-
-### Docker
-
-When `mate init` asks for the command your agent runs Mate with, answer `docker compose exec -T php vendor/bin/mate`.
-
-```bash
-docker compose exec php vendor/bin/mate init
-docker compose exec php vendor/bin/mate discover
-```
-
-### DDEV
-
-When `mate init` asks for the command your agent runs Mate with, keep the proposed `ddev exec vendor/bin/mate`.
-
-```bash
-ddev exec vendor/bin/mate init
-ddev exec vendor/bin/mate discover
-```
-
-### Optional: Symfony tools for the agent
-
-The [Symfony extension](https://symfony.com/doc/current/ai/components/mate.html) of Mate adds tools that read the
-container and the profiler, such as `symfony-services` and `symfony-profiler-list`. 
-The `mate-opendxp-dev` skill uses them when they are installed.
-
-#### Docker
-
-```bash
-docker compose exec php composer require --dev symfony/ai-symfony-mate-extension
-docker compose exec php vendor/bin/mate discover
-```
-
-#### DDEV
-
-```bash
-ddev composer require --dev symfony/ai-symfony-mate-extension
-ddev exec vendor/bin/mate discover
-```
+The extension is already installed. Set Mate up once with `mate init`, as the
+[installation of the Mate extension](https://github.com/open-dxp/mate-extension#installation) describes for Docker and
+DDEV. In this project, the Docker service that runs PHP is called `php`. The installation also describes the optional
+Symfony tools for the agent.
 
 ***
 
