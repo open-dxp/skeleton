@@ -37,6 +37,9 @@
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 
+# Pest / PHPUnit
+/.phpunit.cache
+
 # composer
 /vendor/
 
@@ -50,5 +53,3 @@ nbproject
 
 #
 composer.local.json
-composer.lock
-.ddev

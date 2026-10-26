@@ -35,7 +35,6 @@ class BundleSetupSubscriber implements EventSubscriberInterface
 
     public function bundleSetup(BundleSetupEvent $event): void
     {
-        // add required OpenDxpAdminBundle
         if (class_exists(OpenDxpAdminBundle::class)) {
             $event->addRequiredBundle(
                 'OpenDxpAdminBundle',

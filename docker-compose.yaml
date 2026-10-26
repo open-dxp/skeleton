@@ -88,9 +88,8 @@ services:
         extends: php
         environment:
             APP_ENV: test
-            OPENDXP_TEST_DB_DSN: ${OPENDXP_TEST_DB_DSN:-mysql://opendxp:opendxp@test-db/opendxp}
-            OPENDXP_INSTALL_ADMIN_USERNAME: opendxp
-            OPENDXP_INSTALL_ADMIN_PASSWORD: opendxp
+            DATABASE_URL: mysql://opendxp:opendxp@test-db/opendxp
+            DATABASE_SERVER_VERSION: 10.11.0-MariaDB
             OPENDXP_INSTALL_MYSQL_HOST_SOCKET: test-db
         depends_on:
             test-db:

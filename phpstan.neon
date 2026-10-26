@@ -1,0 +1,18 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 6
+    paths:
+        - src
+        - tests
+    scanFiles:
+        - vendor/open-dxp/opendxp/stubs/dynamic-constants.php
+    symfony:
+        containerXmlPath: var/cache/test/TestContainerDebug.xml
+    ignoreErrors:
+        # Printcontainer of open-dxp/web-to-print-bundle defines it; a project requires that bundle only for print documents.
+        -
+            message: '#^Call to an undefined method OpenDxp\\Model\\Document\:\:getAllChildren\(\)\.$#'
+            path: src/Controller/Web2printController.php
