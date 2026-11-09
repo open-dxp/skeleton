@@ -18,7 +18,7 @@ This skeleton should be used by experienced OpenDXP developers for starting a ne
 Create the project. Docker is enough, you need no PHP on your machine:
 
 ```bash
-docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html opendxp/opendxp:php8.3-latest composer create-project open-dxp/skeleton my-project
+docker run -u `id -u`:`id -g` --rm -v `pwd`:/var/www/html opendxp/opendxp:php8.5-v1 composer create-project open-dxp/skeleton my-project
 cd my-project
 ```
 

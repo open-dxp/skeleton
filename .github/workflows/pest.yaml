@@ -42,7 +42,7 @@ jobs:
                       --volume=${{ github.workspace }}/:/test/ \
                       --workdir=/test/ \
                       --user=$(id -u):$(id -g) \
-                      docker.io/opendxp/opendxp:php8.3-latest \
+                      docker.io/opendxp/opendxp:php8.5-v1 \
                         composer create-project \
                           open-dxp/skeleton:@dev \
                           --repository='{"type": "path", "url": "./skeleton"}' \
